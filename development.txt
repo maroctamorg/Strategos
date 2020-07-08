@@ -1,0 +1,53 @@
+TO DO:
+done. Implement 2nd player functionality by means of two Army class instantiations
+    . Implement user interface
+    done - Fix user input issue for main_menu test proejct
+        done - Have button class generate a text texture pointer at instantiation from Text struct info: then simply rendercopy
+        - implement full main_menu fselect interface
+        done - fix initialisation isssues for std::vector / std::array
+        done - overload copy assignment operator for button class using current initialisation implementation
+                    - //no need, use default copy constructor
+    done    - initialise units with initial positions from position indexation and fgrid parameters in unit constructor rather than field constructor
+     
+    . Implement game dynamics
+        - implement move commands through selection, move check, enable commands, receive commands
+            - move(bool *mvan_ongoing) {
+                mvan_ongoing = true;
+                mv(mv_seg)
+                static int d_covered += mv_seg;
+                if (d_covered == this->move) { mvan_ongoing = false }
+            }
+        - implement attack commands (selection, check (distance) - enable command, receive command)
+            - health handling and display
+        - end game conditions
+        - figure out resizing functionality to test interface
+        - continuous resizing won't work, rather work with the current dynamic framework to provide a selection of window dimensions
+        - implement aselect interface
+            - position input functionality
+        - generate field + armies from user input
+    .Add Wizard Division + spells - as attacks
+    . Polish game mechanics and display
+        - unit numbers + composition rules : soldier cost?
+        - unit moves (maybe choice of advance < max?) + attacks + damages + health
+        - unit attack effectiveness
+    . User interface
+        - dynamic window size
+        - interactive display
+            - translucid rectangles over units
+            - unit division information and health
+            - move and attack preview
+        - user input through screen
+            *selection->command
+            - main menu
+                - field choice
+                - army choice
+                - quit, restart, resume
+                - scrolling translucid displays
+            - move commands from screen
+    . Implement save_match_state + save_army_config + save_game_config
+    . Implement computer bot
+    . Implement online multiplayer
+    . Debugging + Polishing
+    . Target Build
+    . Release on Steam for MacOS, Windows and Linux
+    . Work on Swift for IOs, Android and Google Phone

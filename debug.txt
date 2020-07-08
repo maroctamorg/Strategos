@@ -1,0 +1,17 @@
+current
+    proposed fixes:
+        1. make sure distance between rectangles is right and not zero!
+
+////FIX u_move FOR EACH AS MULTIPLIER
+
+solved:
+    lines:
+        33 (only with 39) : unit.cpp
+        39 : unit.cpp
+    hypothesis:
+        std::vector<SDL_Rect> u_sold_rect is not properly initialised at:
+            resized (33)
+            or
+            assigned value (39)
+    proposed fixes:
+        1: intialised under constructor intialiser list : worked?
