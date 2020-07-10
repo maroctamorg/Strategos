@@ -8,15 +8,15 @@
     Game::Game(Field *field, Army *army1, Army *army2)
         :   g_field { field }, g_army1 { army1 }, g_army2 {army2}
     {
-        int buttonX { 15 };
-        int buttonW { 50 };
-        int buttonY { g_field->f_grid.y0};
+        int buttonX { 15 };  //eventually (when figuring out rescalability) must be fixed
+        int buttonW { 250 }; //eventually (when figuring out rescalability) must be fixed
+        int buttonY { g_field->f_grid.y0 + g_field->f_grid.h/16};
         int buttonH { g_field->f_grid.h/8 };
 
-        gButtons[1].assign(nullptr, "FORTH" ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + g_field->f_grid.h/16, buttonW, buttonH }, { buttonX, buttonY, buttonW, buttonH }, gBtt_clr, false, 0);
-        gButtons[2].assign(nullptr, "BACK"  ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + g_field->f_grid.h/16, buttonW, buttonH }, { buttonX, buttonY + g_field->f_grid.h/4, buttonW, buttonH }, gBtt_clr, false, 0);
-        gButtons[3].assign(nullptr, "UP"    ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + g_field->f_grid.h/16, buttonW, buttonH }, { buttonX, buttonY + 2*g_field->f_grid.h/4, buttonW, buttonH }, gBtt_clr, false, 0);
-        gButtons[4].assign(nullptr, "DOWN"  ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + g_field->f_grid.h/16, buttonW, buttonH }, { buttonX, buttonY + 3*g_field->f_grid.h/4, buttonW, buttonH }, gBtt_clr, false, 0);
+        gButtons[1].assign(nullptr, "FORTH" ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + buttonH/4, buttonW, buttonH/2 }, { buttonX, buttonY, buttonW, buttonH }, gBtt_clr, false, 0);
+        gButtons[2].assign(nullptr, "BACK"  ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + buttonH/4 + 3*g_field->f_grid.h/16,   buttonW, buttonH/2 }, { buttonX, buttonY + 3*g_field->f_grid.h/16, buttonW, buttonH }, gBtt_clr, false, 0);
+        gButtons[3].assign(nullptr, "UP"    ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + buttonH/4 + 6*g_field->f_grid.h/16, buttonW, buttonH/2 }, { buttonX, buttonY + 6*g_field->f_grid.h/16, buttonW, buttonH }, gBtt_clr, false, 0);
+        gButtons[4].assign(nullptr, "DOWN"  ,   "Krungthep.ttf", 25, gBtt_ftclr, { buttonX + 3, buttonY + buttonH/4 + 9*g_field->f_grid.h/16, buttonW, buttonH/2 }, { buttonX, buttonY + 9*g_field->f_grid.h/16, buttonW, buttonH }, gBtt_clr, false, 0);
 
     }
 
@@ -134,9 +134,14 @@
         g_army1->display();
         g_army2->display();
 
+        for (int i {1}; i < 5; i++) {
+            gButtons[i].display();
+        }
+    /*
         for (auto &button : gButtons) {
             button.display();
         }
+    */
 
         SDL_RenderPresent(renderer);
 
@@ -158,7 +163,7 @@
         SDL_Point cursor_pos { 0, 0 };
 
         SDL_PollEvent(&event);
-        std::cout << "Polling Events...\n";
+        //std::cout << "Polling Events...\n";
         switch(event.type)
         {
         case SDL_WINDOWEVENT_RESIZED:
@@ -171,130 +176,129 @@
 
             SDL_GetMouseState(&(cursor_pos.x), &(cursor_pos.y));
 
-            std::cout << "Mouse State obtained.\n";
-
+            //std::cout << "Mouse State obtained.\n";
+            
+            if (cursor_pos.x < g_field->f_grid.x0) {
                 for (int i {0}; i < gButtons.size(); i++)
                 {
-                    std::cout << "Evaluating fs_btt at " << i <<'\n';
-                    if (cursor_pos.x < g_field->f_grid.x0)
+                    if (gButtons[i].isActive() && gButtons[i].Clicked(cursor_pos))
                     {
-                        if (gButtons[i].isActive() && gButtons[i].Clicked(cursor_pos))
-                        {
-                            state = UPDATE;
+                        state = UPDATE;
 
-                            std::cout << "Call to press function.\n";
+                        std::cout << "Call to press function.\n";
 
-                            gButtonPressed = gButtons[i].press();
+                        gButtonPressed = gButtons[i].press();
 
-                            std::cout << "gButtonPressed: " << gButtonPressed << '\n';
-                            //element.press must return a pointer to button element
+                        std::cout << "gButtonPressed: " << gButtonPressed << '\n';
+                        //element.press must return a pointer to button element
+                    }
+                //else if (player1) {check unit selections}
+                //else if (player2) {check unit selctions}
+                }
+            } else if (curr_army == ARMY1) {
+                for (Troop &troop : g_army1->mTroop) {
+                    if (troop.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
+
+                        if (!troop.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(troop.uSelect(pos));
+                            std::cout << "Unit placed in g_selectedUnits at: " << pos << '\n';
+                        } else {
+                            troop.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + troop.posUSelect);
                         }
-                    //else if (player1) {check unit selections}
-                    //else if (player2) {check unit selctions}
-                    } else if (curr_army == ARMY1) {
-                        for (Troop &troop : g_army1->mTroop) {
-                            if (troop.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
 
-                                if (!troop.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(troop.uSelect(pos));
-                                } else {
-                                    troop.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + troop.posUSelect);
-                                }
+                    }
+                }
+                for (Archer &archer : g_army1->mArcher) {
+                    if (archer.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
 
-                            }
+                        if (!archer.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(archer.uSelect(pos));
+                        } else {
+                            archer.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + archer.posUSelect);
                         }
-                        for (Archer &archer : g_army1->mArcher) {
-                            if (archer.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
 
-                                if (!archer.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(archer.uSelect(pos));
-                                } else {
-                                    archer.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + archer.posUSelect);
-                                }
+                    }
+                }
+                for (Knight &knight : g_army1->mKnight) {
+                    if (knight.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
 
-                            }
+                        if (!knight.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(knight.uSelect(pos));
+                        } else {
+                            knight.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + knight.posUSelect);
                         }
-                        for (Knight &knight : g_army1->mKnight) {
-                            if (knight.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
 
-                                if (!knight.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(knight.uSelect(pos));
-                                } else {
-                                    knight.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + knight.posUSelect);
-                                }
-
-                            }
-                            
-                        }
-                    } else if (curr_army == ARMY2) {
-                        for (Troop &troop : g_army2->mTroop) {
-                            if (troop.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
-
-                                if (!troop.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(troop.uSelect(pos));
-                                } else {
-                                    troop.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + troop.posUSelect);
-                                }
-
-                            }
-                        }
-                        for (Archer &archer : g_army2->mArcher) {
-                            if (archer.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
-
-                                if (!archer.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(archer.uSelect(pos));
-                                } else {
-                                    archer.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + archer.posUSelect);
-                                }
-
-                            }
-                        }
-                        for (Knight &knight : g_army2->mKnight) {
-                            if (knight.Clicked(cursor_pos)){
-                                state = UPDATE;
-                                
-                                std::cout << "Call to uSelect function.\n";
-
-                                if (!knight.isSelected()) {
-                                    int pos = g_selectedUnits.size();
-                                    g_selectedUnits.push_back(knight.uSelect(pos));
-                                } else {
-                                    knight.uDeSelect();
-                                    g_selectedUnits.erase(g_selectedUnits.begin() + knight.posUSelect);
-                                }
-
-                            }
-                            
-                        }
                     }
                     
                 }
+            } else if (curr_army == ARMY2) {
+                for (Troop &troop : g_army2->mTroop) {
+                    if (troop.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
+
+                        if (!troop.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(troop.uSelect(pos));
+                        } else {
+                            troop.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + troop.posUSelect);
+                        }
+
+                    }
+                }
+                for (Archer &archer : g_army2->mArcher) {
+                    if (archer.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
+
+                        if (!archer.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(archer.uSelect(pos));
+                        } else {
+                            archer.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + archer.posUSelect);
+                        }
+
+                    }
+                }
+                for (Knight &knight : g_army2->mKnight) {
+                    if (knight.Clicked(cursor_pos)){
+                        state = UPDATE;
+                        
+                        std::cout << "Call to uSelect function.\n";
+
+                        if (!knight.isSelected()) {
+                            int pos = g_selectedUnits.size();
+                            g_selectedUnits.push_back(knight.uSelect(pos));
+                        } else {
+                            knight.uDeSelect();
+                            g_selectedUnits.erase(g_selectedUnits.begin() + knight.posUSelect);
+                        }
+
+                    }
+                    
+                }
+            }          
             break;
+
         case SDL_QUIT:
             state = TERMINATE;
             break;

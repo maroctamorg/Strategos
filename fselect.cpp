@@ -194,7 +194,7 @@ GAME_STATE fselect_menu::get_uinput()
     SDL_Point cursor_pos { 0, 0 };
 
         SDL_PollEvent(&event);
-        std::cout << "Polling Events...\n";
+        //std::cout << "Polling Events...\n";
         switch(event.type)
         {
         case SDL_MOUSEBUTTONDOWN:
@@ -203,7 +203,7 @@ GAME_STATE fselect_menu::get_uinput()
 
             SDL_GetMouseState(&(cursor_pos.x), &(cursor_pos.y));
 
-            std::cout << "Mouse State obtained.\n";
+            //std::cout << "Mouse State obtained.\n";
 
                 for (int i {0}; i < fs_btt.size(); i++)
                 {

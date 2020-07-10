@@ -97,7 +97,7 @@ void Unit::updateDimensions(const fGrid &grid)
 
 void Unit::display()
 {
-    std::cout << "Call to unit.display().\n";
+    //std::cout << "Call to unit.display().\n";
     SDL_SetRenderDrawColor(renderer, uColor.r, uColor.g, uColor.b, uColor.a);
         for (int i {0}; i < 9; i++) {   SDL_RenderFillRect(renderer, &u_sold_rect[i]);  }
 
@@ -130,7 +130,7 @@ int Unit::get_health(){ return u_health; }
 
 bool Unit::Clicked(const SDL_Point &cursor_pos)
 {
-    std::cout << "Call to Unit.uSelect.\n";
+    std::cout << "Call to Unit.Clicked.\n";
     bool control { false };
 
     //YET TO BE IMPLEMENTED

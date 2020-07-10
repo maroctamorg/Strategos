@@ -8,4 +8,4 @@ all: compile run
 compile:
 	g++ -o War ${FILES} ${INCLUDE} ${CFLAGS}
 run:
-	./War
+	./War > log.txt

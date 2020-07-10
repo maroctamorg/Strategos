@@ -48,7 +48,7 @@ int main (int argc, char *argv[])
         //SDL_Delay(10000);
         menu_state = f_menu.get_uinput();
 
-        std::cout << "Menu state: " << menu_state << '\n';
+        //std::cout << "Menu state: " << menu_state << '\n';
 
         if (menu_state == UPDATE)
         {
@@ -186,13 +186,13 @@ int main (int argc, char *argv[])
                 //Game::update()
                 if (game_state == UPDATE)
                 {
-                    p1_done = game.update();
+                    p2_done = game.update();
                         //make sure all selected items can perform that action (special wizard and archer classes)
                 }
 
                 if (game_state == TERMINATE)
                 {
-                    p1_done = true;
+                    p2_done = true;
                     exit_game = true;
                 }
             }

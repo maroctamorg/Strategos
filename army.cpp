@@ -76,7 +76,7 @@ void Army::updateDimensions(const fGrid &grid)
 
 void Army::display()
 {
-    std::cout << "Call to army.display().\n";
+    //std::cout << "Call to army.display().\n";
 
     for (int i{0}; i < mTroop.size(); i++)
     {

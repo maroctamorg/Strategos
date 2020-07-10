@@ -71,7 +71,7 @@ void Field::updateDimensions()
 
 void Field::display()
 {
-    std::cout << "Field display called.\n";
+    //std::cout << "Field display called.\n";
     //top left corner
     SDL_Rect target_rect { f_grid.x0, f_grid.y0, f_grid.w, f_grid.h };
     SDL_SetRenderDrawColor(renderer, 128, 94, 0, 250);
