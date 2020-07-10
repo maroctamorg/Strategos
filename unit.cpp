@@ -143,11 +143,19 @@ bool Unit::Clicked(const SDL_Point &cursor_pos)
 }
 
 void Unit::activate()     {   uState.active  =   true;   }
-Unit* Unit::uSelect() {
-    uState.pressed =   true;
+void Unit::deactivate()   {   uState.active  =   false;  }
+
+Unit* Unit::uSelect(int pos) {
+    uState.pressed = true;
+    posUSelect = pos;
+
     return this;
 }
-void Unit::deactivate()   {   uState.active  =   false;  }
+
+void Unit::uDeSelect(){
+    uState.pressed = false;
+    posUSelect = 0;
+}
 
 
 bool Unit::isActive()     {   return uState.active;  }

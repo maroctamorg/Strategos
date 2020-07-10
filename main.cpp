@@ -133,65 +133,73 @@ int main (int argc, char *argv[])
 
     //SDL_Delay(1000);
 
-    
-    GAME_STATE game_state { NOINPUT };
+    while(!exit_game){
+        GAME_STATE game_state { NOINPUT };
 
-    //user 1 input game loop
-    bool p1_done { false };
+        //user 1 input game loop
+        bool p1_done { false };
 
-    while (!exit_game && !p1_done)
-    {
-        //Game::render()
-        game.display();
+        while (!exit_game && !p1_done)
+        {
+            //Game::render()
+            game.display();
 
-        if(game_state == ANIMATION) {
-            game.move_animation();
+            if(game_state == ANIMATION) {
+                game.move_animation();
 
-        } else {
+            } else {
 
-            //Game::get_user_input()
-            game_state = game.get_uinput();
+                //Game::get_user_input()
+                game_state = game.get_uinput();
 
-            //Game::update()
-            if (game_state == UPDATE)
-            {
-            //p1_done = game.update();
-                    //make sure all selected items can perform that action (special wizard and archer classes)
+                //Game::update()
+                if (game_state == UPDATE)
+                {
+                    p1_done = game.update();
+                        //make sure all selected items can perform that action (special wizard and archer classes)
+                }
+
+                if (game_state == TERMINATE)
+                {
+                    p1_done = true;
+                    exit_game = true;
+                }
             }
-
-            if (game_state == TERMINATE)
-            {
-                p1_done = true;
-                exit_game = true;
-            }
+            
         }
-
         
-    }
+        //user 2 input game loop
+        bool p2_done { false };
+        while (!exit_game && !p2_done)
+        {
+            //Game::render()
+            game.display();
+
+            if(game_state == ANIMATION) {
+                game.move_animation();
+
+            } else {
+
+                //Game::get_user_input()
+                game_state = game.get_uinput();
+
+                //Game::update()
+                if (game_state == UPDATE)
+                {
+                    p1_done = game.update();
+                        //make sure all selected items can perform that action (special wizard and archer classes)
+                }
+
+                if (game_state == TERMINATE)
+                {
+                    p1_done = true;
+                    exit_game = true;
+                }
+            }
+
+        }
+    }    
     
-    //user 2 input game loop
-    bool p2_done { false };
-    while (!exit_game && !p2_done)
-    {
-        //Game::render()
-        game.display();
-
-        //Game::get_user_input_menu()
-        game_state = game.get_uinput();
-
-        //Game::update()
-        if (game_state == UPDATE)
-        {
-            //mm_done = game.update();
-        }
-
-        if (game_state == TERMINATE)
-        {
-            p2_done = true;
-            exit_game = true;
-        }
-
-    }
 
 
 
