@@ -31,6 +31,8 @@ private:
 
 public:
 
+    int posUSelect { 0 };
+
     SDL_Rect uColRect { 0, 0, 0, 0 };
 
     Unit_Division u_division { EMPTY };
@@ -48,9 +50,10 @@ public:
 
     bool Clicked(const SDL_Point &cursor_pos);
     void activate();
-    Unit* uSelect();
-
     void deactivate();
+
+    Unit* uSelect(int pos);
+    void uDeSelect();
 
     bool isActive();
     bool isSelected();

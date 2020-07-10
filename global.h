@@ -90,7 +90,9 @@ typedef struct{
     int xG, yG, w, h, dz;
 } fGrid;
 
-inline bool isContained(SDL_Point cursor_pos, SDL_Rect rect);
+inline bool isContained(SDL_Point cursor_pos, SDL_Rect rect) {
+    return (cursor_pos.x > rect.x && cursor_pos.x < (rect.x + rect.w) && cursor_pos.y > rect.y && cursor_pos.y < (rect.y + rect.h));
+}
 
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;

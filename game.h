@@ -20,8 +20,6 @@ private:
     Army *g_army1;
     Army *g_army2;
 
-    Army_enum curr_army { ARMY1 };
-
     std::array<Button, 8> gButtons;
     Button *gButtonPressed { nullptr };
 
@@ -35,6 +33,10 @@ private:
 
 
 public:
+
+    Army_enum curr_army { ARMY1 };
+
+    bool mvAnimation { false };
 
     Game() = default;
     Game(Field *field, Army *army1, Army *army2);

@@ -8,6 +8,8 @@ private:
 
 protected: 
 
+public:
+
 
     //substitute below and above for:
     std::vector<Troop> mTroop{};
@@ -16,8 +18,6 @@ protected:
     
     //figure out how to handle army construction and review troop/archer/knight/mage units implementation
         //use std::vector for each division -> std::vector.resize()
-
-public:
 
     Army() = default;
 
